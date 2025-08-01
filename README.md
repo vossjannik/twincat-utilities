@@ -23,7 +23,7 @@ The `MID2` function is to `MID` what `FIND2` is to `FIND` - an enhanced version 
 FUNCTION MID2: STRING(255)
 VAR_INPUT
     pString     : POINTER TO STRING;  // Pointer to source string
-    nLen        : UDINT;              // Length of substring to extract
+    nLen        : UDINT(0..255);      // Length of substring to extract
     nPos        : UDINT;              // Starting position (1-based)
 END_VAR
 ```
