@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="R_TRIG_DEBOUNCED" Id="{31d2331a-25c8-4aeb-b784-435172b1bf00}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK R_TRIG_DEBOUNCED
+VAR_INPUT
+    CLK : BOOL;                      // Raw input signal
+    DEBOUNCE_TIME : TIME := T#200MS; // Debounce duration
+END_VAR
+VAR_OUTPUT
+    Q : BOOL; // Rising edge output
+END_VAR
+VAR
+    RTrig : R_TRIG;
+    BlockTimer : TON;
+	bIsCurrentlyBlocked : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[RTrig(CLK := CLK);
+Q := RTrig.Q AND NOT bIsCurrentlyBlocked;
+
+IF RTrig.Q THEN
+	BlockTimer.IN := TRUE;
+	bIsCurrentlyBlocked := TRUE;
+END_IF
+BlockTimer(PT := DEBOUNCE_TIME);
+IF BlockTimer.Q THEN
+	bIsCurrentlyBlocked := FALSE;
+	BlockTimer.IN := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="MID2" Id="{e45c36f5-4e8f-4874-9bc9-02c16f310c8a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION MID2: STRING(255)
+VAR_INPUT
+    pString     : POINTER TO STRING;
+    nLen        : UDINT;     // Length of substring to extract
+    nPos        : UDINT;     // Starting position (1-based)
+END_VAR
+VAR
+    sResult     : STRING(255);
+    fullLen     : UDINT;
+    copyLen     : UDINT;
+    pTerm       : POINTER TO BYTE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fullLen := LEN2(pString);
+
+IF nPos = 0 OR nPos > fullLen OR nLen = 0 THEN
+    MID2 := '';
+ELSE
+    copyLen := MIN(nLen, fullLen - nPos + 1);
+    copyLen := MIN(copyLen, 255);  // Ensure it fits in STRING(255), This function is designed for extracting small substrings from strings of arbitrary size
+    
+    MEMCPY(destAddr:=ADR(sResult), srcAddr:=pString + (nPos - 1), n:=copyLen);
+    
+    pTerm := ADR(sResult) + copyLen;
+    pTerm^ := TO_BYTE(0);
+    
+    MID2 := sResult;
+END_IF
+
+// Note: This function requires Tc2_System for MEMCPY.
+// Positions are 1-based, consistent with standard MID function.
+// Assumes the long string is null-terminated.
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
