@@ -33,7 +33,7 @@ END_VAR
 ```pascal
 VAR
     longString : STRING(1000) := 'This is a very long string that contains important data...';
-    result : STRING(255);
+    result     : STRING(255);
 END_VAR
 
 result := MID2(pString := ADR(longString), nLen := 10, nPos := 5);
@@ -94,9 +94,9 @@ END_VAR
 
 ```pascal
 VAR
-    switchInput : BOOL;          // Raw switch input
+    switchInput      : BOOL;          // Raw switch input
     debouncedTrigger : R_TRIG_DEBOUNCED;
-    actionTriggered : BOOL;
+    actionTriggered  : BOOL;
 END_VAR
 
 debouncedTrigger(CLK := switchInput, DEBOUNCE_TIME := T#300MS);
@@ -123,7 +123,6 @@ flowchart LR
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"primaryColor": "#ffffff"}}}%%
 gantt
-    title R_TRIG_DEBOUNCED Timing Behavior
     dateFormat X
     axisFormat %L
 
